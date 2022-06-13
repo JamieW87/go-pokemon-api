@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"go-pokemon-api/config"
 	"go-pokemon-api/handlers"
+	"go-pokemon-api/persistence"
 	"net/http"
 	"os"
 	"os/signal"
@@ -23,9 +24,16 @@ func main() {
 	}
 
 	log := logrus.New()
+
+	//Create pool to DB on startup
+	dbPool, err := persistence.Connect(env.PostgresHost, env.PostgresPort, env.PostgresName, env.PostgresUser, env.PostgresPassword, log)
+	if err != nil {
+		panic(err)
+	}
+
 	muxRouter := mux.NewRouter()
 
-	handlers.Router(muxRouter, log, env)
+	handlers.Router(muxRouter, log, env, dbPool)
 
 	h := &http.Server{
 		Addr:    ":" + strconv.Itoa(env.Port),
