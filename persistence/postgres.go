@@ -7,6 +7,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type PostgresDB struct {
+	Pool *pgxpool.Pool
+	Ctx  context.Context
+}
+
 // Connect creates a new connection to the database
 func Connect(host string, port int, db string, user string, pw string, log *logrus.Logger) (*pgxpool.Pool, error) {
 	ctx := context.Background()

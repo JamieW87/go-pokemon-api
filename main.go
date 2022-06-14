@@ -31,9 +31,14 @@ func main() {
 		panic(err)
 	}
 
+	db := &persistence.PostgresDB{
+		Pool: dbPool,
+		Ctx:  context.Background(),
+	}
+
 	muxRouter := mux.NewRouter()
 
-	handlers.Router(muxRouter, log, env, dbPool)
+	handlers.Router(muxRouter, log, env, db)
 
 	h := &http.Server{
 		Addr:    ":" + strconv.Itoa(env.Port),

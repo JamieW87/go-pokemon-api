@@ -2,15 +2,15 @@ package handlers
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
 	"go-pokemon-api/config"
+	"go-pokemon-api/persistence"
 	"net/http"
 )
 
-func Router(router *mux.Router, log *logrus.Logger, cfg *config.Environment, dbPool *pgxpool.Pool) {
+func Router(router *mux.Router, log *logrus.Logger, cfg *config.Environment, db *persistence.PostgresDB) {
 
-	getPokemonByIDHandler := newGetPokemonByIDHandler(log)
+	getPokemonByIDHandler := newGetPokemonByIDHandler(log, db)
 
 	router.HandleFunc("/isalive", healthCheck).Name("isAlive")
 
